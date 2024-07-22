@@ -1,0 +1,49 @@
+ion-list {
+    ion-list-header {
+        margin-bottom: 5px;
+    }
+
+    ion-item {
+        margin-bottom: 0.5em;
+
+        ion-input,
+        ion-textarea {
+            margin-top: 0.5em;
+        }
+    }
+}
+
+.outline {
+    height: auto;
+    margin: 0 1em;
+    width: 90%;
+    border: 1px solid lightblue;
+    border-radius: 10px;
+}
+
+.mailbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.error {
+    margin-top: -0.7em;
+    color: red;
+    --background: transparent;
+    --border-color: transparent;
+}
+
+ion-icon{
+    font-size: 5em;
+    padding: 0.3em;
+}
+
+.inputdata {
+    display: none;
+}
+
+img {
+    padding: 0.5em;
+}
