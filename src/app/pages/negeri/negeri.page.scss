@@ -1,0 +1,19 @@
+.container {
+    border-radius: 8px;
+    text-align: center;
+    margin: 5px;
+    border: 1px solid gray;
+    width: 120px;
+    height: 115px;
+    flex-direction: column;
+    justify-content: space-around;
+    display: flex;
+}
+
+.img-flag{
+    padding: 3px;
+}
+
+ion-text {
+    color: gray;
+}

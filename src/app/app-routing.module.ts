@@ -24,8 +24,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/map2/map2.module').then( m => m.Map2PageModule)
   },
   {
-    path: 'outbreak',
+    path: 'outbreak/:id',
     loadChildren: () => import('./pages/outbreak/outbreak.module').then( m => m.OutbreakPageModule)
+  },
+  {
+    path: 'negeri',
+    loadChildren: () => import('./pages/negeri/negeri.module').then( m => m.NegeriPageModule)
   }
 ];
 

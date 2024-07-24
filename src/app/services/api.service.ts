@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
   private baseURL: string = 'http://localhost:8888/api';
+  // private baseURL: string = 'https://idengue.mysa.gov.my/folder_AppIdengue';
+
   constructor(private httpClient: HttpClient) { }
 
   async doPost(endpoint: string, payload: any, isObject?: boolean){
