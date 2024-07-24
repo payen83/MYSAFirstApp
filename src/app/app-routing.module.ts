@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'negeri',
     loadChildren: () => import('./pages/negeri/negeri.module').then( m => m.NegeriPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   }
 ];
 

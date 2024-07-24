@@ -13,6 +13,7 @@ export class OutbreakPage implements OnInit {
   outbreakList: any = [];
   outbreakListMaster: Array<any> = [];
   counter: number = 0;
+  wabakCounter: number = 0;
   id: any = null;
   searchText: string = '';
   resultList: Array<any> = [];
@@ -20,6 +21,8 @@ export class OutbreakPage implements OnInit {
   searchTextHotspot: string = '';
   hotspotList: Array<any> = [];
   hotspotListMaster: Array<any> = [];
+  disableScrollHotspot: boolean = false;
+  disableScrollWabak: boolean = false;
   constructor(
     public apiService: ApiService,
     private activatedRoute: ActivatedRoute,
@@ -84,17 +87,34 @@ export class OutbreakPage implements OnInit {
   }
 
   onIonInfinite(event: any) {
-    setTimeout(() => {
-      this.counter += 1;
-      for (let i = (this.counter); i <= (this.counter + 15); i++) {
-        if (this.type == 'wabak' && i <= this.outbreakListMaster.length) {
-          this.outbreakList.push(this.outbreakListMaster[i]);
-        } else if (this.type == 'hotspot' && i <= this.hotspotListMaster.length) {
-          this.hotspotList.push(this.hotspotListMaster[i]);
+    if (!this.disableScrollHotspot || !this.disableScrollWabak) {
+      setTimeout(() => {
+        if (this.type == 'wabak') {
+          // this.counter += 1;
+          for (let i = (this.counter); i <= (this.counter+15); i++) {
+            if (i < this.outbreakListMaster.length) {
+              this.outbreakList.push(this.outbreakListMaster[i]);
+            } else {
+              this.disableScrollWabak = true;
+              break;
+            }
+          }
+          this.counter += 15;
+        } else {
+          for (let i = (this.wabakCounter); i <= (this.wabakCounter + 15); i++) {
+            if (i < this.hotspotListMaster.length) {
+              this.hotspotList.push(this.hotspotListMaster[i]);
+            } else {
+              this.disableScrollHotspot = true;
+              break;
+            }
+          }
+          this.wabakCounter += 15;
         }
-      }
-      (event as InfiniteScrollCustomEvent).target.complete();
-    }, 1000);
+        (event as InfiniteScrollCustomEvent).target.complete();
+      }, 1000);
+    }
+
   }
 
 }

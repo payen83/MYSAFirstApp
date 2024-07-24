@@ -20,14 +20,11 @@ export class NegeriPage implements OnInit {
     }  else{
       setTimeout(()=>{
         this.stateList = this.getState();
-      }, 3000);
+      }, 5000);
     }
   }
 
   getState(){
     return this.dataService.getData('STATS');
   }
-
-
-
 }
