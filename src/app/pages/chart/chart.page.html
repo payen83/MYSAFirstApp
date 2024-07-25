@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ setTitle() }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ setTitle() }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+    [title]="chartOptions.title"
+    [plotOptions]="chartOptions.plotOptions"
+    [grid]="chartOptions.grid"
+    [dataLabels]="chartOptions.dataLabels"
+  ></apx-chart>
+</ion-content>

@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
     { title: 'Map', url: '/map1', icon: 'map' },
     { title: 'Maklumbalas', url: '/maklumbalas', icon: 'mail' },
     { title: 'Hotspot & Wabak', url: '/negeri', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
+    { title: 'Dashboard', url: '/dashboard', icon: 'heart' },
     { title: 'Archived', url: '/folder/archived', icon: 'archive' },
     { title: 'Trash', url: '/folder/trash', icon: 'trash' },
     { title: 'Spam', url: '/folder/spam', icon: 'warning' },

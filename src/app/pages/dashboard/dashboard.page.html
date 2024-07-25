@@ -43,4 +43,29 @@
       </ion-label>
     </ion-item>
   </ion-list>
+
+  <ion-list [inset]="true">
+    <ion-list-header mode="md">
+      <ion-title>Statistik Mengikut Negeri</ion-title>
+    </ion-list-header>
+    <ion-item [button]="true" mode="ios" routerLink="/chart/KES_KUMULATIF">
+      <ion-icon color="primary" slot="start" name="stats-chart" size="large"></ion-icon>
+      <ion-label>
+        <h2>Kes Kumulatif</h2>
+      </ion-label>
+    </ion-item>
+    <ion-item [button]="true" mode="ios" routerLink="/chart/KES_HARIAN">
+      <ion-icon color="warning" slot="start" name="stats-chart" size="large"></ion-icon>
+      <ion-label>
+        <h2>Kes Harian</h2>
+      </ion-label>
+    </ion-item>
+    <ion-item [button]="true" mode="ios" routerLink="/chart/KES_KEMATIAN">
+      <ion-icon color="danger" slot="start" name="stats-chart" size="large"></ion-icon>
+      <ion-label>
+        <h2>Kes Kematian</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

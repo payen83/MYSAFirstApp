@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+  {
+    path: 'chart/:category',
+    loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
   }
 ];
 
