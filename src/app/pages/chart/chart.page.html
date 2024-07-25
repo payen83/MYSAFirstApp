@@ -1,5 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
     <ion-title>{{ setTitle() }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -10,6 +11,7 @@
       <ion-title size="large">{{ setTitle() }}</ion-title>
     </ion-toolbar>
   </ion-header>
+  <div class="ion-padding-top"></div>
   <apx-chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"

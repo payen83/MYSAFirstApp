@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   public appPages = [
-    { title: 'Map', url: '/map1', icon: 'map' },
+    { title: 'Map', url: '/map2', icon: 'map' },
     { title: 'Maklumbalas', url: '/maklumbalas', icon: 'mail' },
     { title: 'Hotspot & Wabak', url: '/negeri', icon: 'paper-plane' },
     { title: 'Dashboard', url: '/dashboard', icon: 'heart' },
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // this.router.navigateByUrl('/map1', { replaceUrl: true });
+    this.router.navigateByUrl('/map1', { replaceUrl: true }); 
     await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/getstatistic.php', 'STATS');
      await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/gethotspot.php', 'HOTSPOT');
      await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/getWABAK.php', 'WABAK');

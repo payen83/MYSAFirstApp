@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 import {
   ApexAxisChartSeries,
@@ -27,7 +28,8 @@ export class ChartPage implements OnInit {
   public chartOptions: any;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private dataService: DataService
+    private dataService: DataService,
+    private loadingCtrl: LoadingController
   ) { 
     this.category = this.activatedRoute.snapshot.paramMap.get('category');
     this.setChart([], []);
@@ -37,7 +39,15 @@ export class ChartPage implements OnInit {
     return this.category.replace(/_/g," ");
   }
 
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      duration: 5000,
+    });
+    loading.present();
+  }
+
   ngOnInit() {
+    this.showLoading();
     setTimeout(()=>{
       let stats = this.dataService.getData('STATS');
       let states = stats.map((item: any) => { return item.NEGERI }); // item['NEGERI']; //item['LOKALITI.DAERAH.XYZ']
@@ -53,7 +63,6 @@ export class ChartPage implements OnInit {
         {
           name: this.setTitle(),
           data: values
-          // data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
         }
       ],
       dataLabels: {
@@ -62,9 +71,8 @@ export class ChartPage implements OnInit {
           colors: ["grey"]
         },
         formatter: (val: any, opt: any) => { return opt.w.globals.labels[opt.dataPointIndex] + ": " + val },
-        // formatter: (val: any, opt: any) => { return val },
         offsetX: -5,
-        offsetY: -15
+        offsetY: -16
       },
       plotOptions: {
         bar: {
@@ -81,8 +89,9 @@ export class ChartPage implements OnInit {
         show: false
       },
       chart: {
-        height: 600,
-        type: "bar"
+        height: 700,
+        type: "bar",
+        toolbar: { show: false }
       },
       title: {
         text: "STATISTIK BAGI " + this.setTitle() + " MENGIKUT NEGERI"
