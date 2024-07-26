@@ -20,14 +20,11 @@
   </ion-fab>
 
   <ion-list inset="true" *ngIf="searchText != ''">
-    <ion-item>
-      <ion-label>Lokasi 1</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>Lokasi 2</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>Lokasi 3</ion-label>
+    <ion-item *ngFor="let item of resultList" [button]="true" (click)="setMarker([item.latitude, item.longitude])">
+      <ion-label>
+        <h2><strong>{{ item.name }}</strong></h2>
+        <p>{{ item.locationrootname }}</p>
+      </ion-label>
     </ion-item>
   </ion-list>
 

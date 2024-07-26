@@ -11,12 +11,12 @@ export class ApiService {
   constructor(private httpClient: HttpClient) { }
 
   async doPost(endpoint: string, payload: any, isObject?: boolean){
-    let token: any = null;
+    let token: any = 'insert your token';
     let headers: any = {};
-    let fullURL: string = this.baseURL + endpoint;
+    let fullURL: string = endpoint;
 
     if(token){
-      headers = { headers: new HttpHeaders({ Authorization: 'Bearer ' + token })
+      headers = { headers: new HttpHeaders({ Authorization: token })
       .set('Content-Type', 'application/json')};
     }
 
