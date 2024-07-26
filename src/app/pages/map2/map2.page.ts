@@ -1,8 +1,11 @@
 
 // declare var L: any;
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import * as esri from 'esri-leaflet';
+import { DataService } from 'src/app/services/data.service';
+import { Geolocation } from '@capacitor/geolocation';
+import { debounceTime, Subject } from 'rxjs';
 //npm install leaflet esri-leaflet @types/leaflet @types/esri-leaflet --save
 
 @Component({
@@ -10,11 +13,51 @@ import * as esri from 'esri-leaflet';
   templateUrl: './map2.page.html',
   styleUrls: ['./map2.page.scss'],
 })
-export class Map2Page implements OnInit {
+export class Map2Page implements OnInit, OnDestroy {
   public map: any;
-  constructor() { }
+  public searchText: string = '';
+  private searchSubject = new Subject<string>;
+  private readonly debounceTimeMs = 2000;
+  constructor(private dataService: DataService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const response: any = await Geolocation.getCurrentPosition();
+    if(response){
+      let coords = response.coords;
+      console.log('Coordinate ==> ', coords);
+      this.dataService.setData('GEOLOCATION', [coords.latitude, coords.longitude]);
+    }
+    this.setSearchSubject();
+  }
+
+  setSearchSubject(){
+    this.searchSubject.pipe(debounceTime(this.debounceTimeMs)).subscribe((text: any) => {
+      this.beginSearch(text);
+    });
+  }
+
+  beginSearch(keyword: string){
+    console.log('call API for keyword', keyword);
+    //start calling API
+  }
+
+  onSearch(){
+    this.searchSubject.next(this.searchText);
+  }
+
+  ngOnDestroy(){
+    this.searchSubject.complete();
+  }
+
+  getGeolocation(){
+    const coords = this.dataService.getData('GEOLOCATION');
+    console.log(coords);
+    this.setMarker(coords);
+  }
+
+  setMarker(coords_: any){
+    let marker = L.marker(coords_).addTo(this.map);
+    this.map.flyTo(coords_);
   }
 
   ionViewWillEnter() {
@@ -95,6 +138,13 @@ export class Map2Page implements OnInit {
 
     let layer = esri.featureLayer({
       url: feature_.url,
+      style: (feature: any) => {
+        if(feature.geometry.type == "Polygon"){
+          return { color: "red", weight: 2};
+        } else {
+          return;
+        }
+      },
       pointToLayer: (geojson, latlng) => {
         if (feature_.itemName != 'WABAK') {
           return L.marker(latlng, {

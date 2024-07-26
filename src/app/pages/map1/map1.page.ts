@@ -7,6 +7,7 @@ import Point from '@arcgis/core/geometry/Point';
 import Graphic from '@arcgis/core/Graphic';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-map1',
@@ -16,13 +17,14 @@ import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 export class Map1Page implements OnInit {
   public coords: any = { latitude: null, longitude: null };
   public map: any;
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   async ngOnInit() {
     const response: any = await Geolocation.getCurrentPosition();
     if(response){
       this.coords = response.coords;
       console.log('Coordinate ==> ', this.coords);
+      this.dataService.setData('GEOLOCATION', [this.coords.latitude, this.coords.longitude])
       this.initMap();
     }
   }
