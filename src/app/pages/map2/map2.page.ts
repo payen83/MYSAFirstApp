@@ -9,6 +9,11 @@ import { debounceTime, Subject } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 //npm install leaflet esri-leaflet @types/leaflet @types/esri-leaflet --save
 
+interface Point {
+  lat: number,
+  lng: number
+}
+
 @Component({
   selector: 'app-map2',
   templateUrl: './map2.page.html',
@@ -21,6 +26,8 @@ export class Map2Page implements OnInit, OnDestroy {
   private readonly debounceTimeMs = 2000;
   public markers: Array<any> = [];
   public resultList: Array<any> = [];
+  private polygonData: Array<any> = [];
+  public isToastOpen: boolean = false;
   constructor(
     private dataService: DataService,
     private apiService: ApiService
@@ -73,13 +80,68 @@ export class Map2Page implements OnInit, OnDestroy {
   }
 
   setMarker(coords_: any) {
-    for(let marker of this.markers){
+    for (let marker of this.markers) {
       this.map.removeLayer(marker);
     }
     this.searchText = '';
     let marker = L.marker(coords_).addTo(this.map);
     this.map.flyTo(coords_);
     this.markers.push(marker);
+    let point = { lat: coords_[0], lng: coords_[1] }
+    const isInsidePolygon: boolean = this.detectGeofencingWabak(point);
+    if (isInsidePolygon) {
+      this.setOpen(true);
+    }
+  }
+
+  detectGeofencingWabak(coords: Point) {
+    for (let polygon of this.polygonData) {
+      let item = polygon[0];
+      if (this.checkWabak(coords, item)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isToastOpen = isOpen;
+  }
+
+  checkWabak(coords: any, polydata: any) {
+    let polygon = convertPoint(polydata);
+
+    return isPointInPolygon(coords, polygon);
+
+    function isPointInPolygon(point: Point, polygon: Point[]): boolean {
+      let isInside = false;
+      const x = point.lng;
+      const y = point.lat;
+      const n = polygon.length;
+
+      for (let i = 0, j = n - 1; i < n; j = i++) {
+        const xi = polygon[i].lng;
+        const yi = polygon[i].lat;
+        const xj = polygon[j].lng;
+        const yj = polygon[j].lat;
+
+        const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) {
+          isInside = !isInside;
+        }
+      }
+      return isInside;
+    }
+
+    function convertPoint(dataPoly: Array<any>) {
+      let finalPolygon: Array<any> = [];
+      for (let item of dataPoly) {
+        let coordsItem = { lat: item[1], lng: item[0] };
+        finalPolygon.push(coordsItem);
+      }
+      return finalPolygon;
+    }
+
   }
 
   ionViewWillEnter() {
@@ -92,7 +154,7 @@ export class Map2Page implements OnInit, OnDestroy {
     esri.dynamicMapLayer({
       url: 'https://mygis.mysa.gov.my/erica1/rest/services/iDengue/mobile_idengue/FeatureServer'
     }).addTo(this.map);
-//https://mygis.mysa.gov.my/erica1/rest/services/iDengue/WM_idengue/FeatureServer
+    //https://mygis.mysa.gov.my/erica1/rest/services/iDengue/WM_idengue/FeatureServer
     let featureLayer: any = [
       {
         itemName: 'COMBI',
@@ -122,36 +184,6 @@ export class Map2Page implements OnInit, OnDestroy {
   }
 
   createFeatureLayer(feature_: any, layerControl_: any) {
-    // const icon_ = L.icon({
-    //   iconUrl: feature_.iconURL,
-    //   iconSize: [25, 25]
-    // });
-
-    // let layer = esri.featureLayer({
-    //   url: feature_.url,
-    //   onEachFeature: (feature) => {
-    //     console.log(feature);
-    //     // console.log(layer);
-    //   },
-    //   pointToLayer: (geojson, latlng) => {
-    //     // console.log(latlng);
-    //     console.log(geojson);
-    //     if (feature_.itemName == 'COMBI' || feature_.itemName == 'WOLBACHIA') {
-    //       return L.marker(latlng, {
-    //         icon: icon_
-    //       });
-    //     } else {
-    //       return;
-    //     }
-    //   }
-    // })
-
-    // layer.bindPopup((layer_: any) => {
-    //   return L.Util.template(
-    //     feature_.template,
-    //     layer_.feature.properties
-    //   );
-    // }); 
 
     const icon_ = L.icon({
       iconUrl: feature_.iconURL,
@@ -179,11 +211,10 @@ export class Map2Page implements OnInit, OnDestroy {
       onEachFeature: (feature, layer) => {
         if (feature_.itemName == 'WABAK') {
           console.log(feature);
+          this.polygonData.push(feature.geometry.coordinates);
         }
       }
     })
-
-
 
     if (feature_.itemName != 'WABAK') {
       layer.bindPopup((layer_: any) => {
@@ -200,13 +231,6 @@ export class Map2Page implements OnInit, OnDestroy {
     layer.addTo(this.map);
 
     layerControl_.addOverlay(layer, feature_.itemName);
-
-    // layer.on('load', () => {
-    //   console.log('test')
-    //   layer.setStyle({
-    //     color: 'red'
-    //   })
-    // });
 
   }
 

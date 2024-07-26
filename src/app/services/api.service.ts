@@ -11,7 +11,7 @@ export class ApiService {
   constructor(private httpClient: HttpClient) { }
 
   async doPost(endpoint: string, payload: any, isObject?: boolean){
-    let token: any = 'insert your token';
+    let token: any = 'insert here';
     let headers: any = {};
     let fullURL: string = endpoint;
 
