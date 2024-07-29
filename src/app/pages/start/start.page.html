@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Start</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Start</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div>
+    <swiper-container [pagination]="true">
+      <swiper-slide>
+        <div class="image"><img src="assets/Tutorial/1.jpg"></div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="image"><img src="assets/Tutorial/2.jpg"></div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="image"><img src="assets/Tutorial/3.jpg"></div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="image"><img src="assets/Tutorial/4.jpg"></div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" fill="clear" (click)="setDoneTutorial()">Skip</ion-button>
+  </ion-toolbar>
+</ion-footer>

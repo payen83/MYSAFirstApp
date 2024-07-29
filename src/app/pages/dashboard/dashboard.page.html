@@ -68,4 +68,18 @@
     </ion-item>
   </ion-list>
 
+  <div class="overlay" *ngIf="showOverlay">
+    <div id="step1" (click)="step1()" *ngIf="showStep1">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+      <h1>Click this item</h1>
+    </div>
+    <div id="step2" (click)="step2()" *ngIf="showStep2">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+      <h1>Click this for more..</h1>
+    </div>
+    <div id="step3" (click)="step3()" *ngIf="showStep3">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+      <h1>Finally, click this graph..</h1>
+    </div>
+  </div>
 </ion-content>
