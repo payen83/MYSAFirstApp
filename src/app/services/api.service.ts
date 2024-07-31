@@ -11,12 +11,12 @@ export class ApiService {
   constructor(private httpClient: HttpClient) { }
 
   async doPost(endpoint: string, payload: any, isObject?: boolean){
-    let token: any = 'METToken 24f2e410a8fb09cb2f3cba78e40fd88effa93f8b';
+    let token: any = 'AIzaSyCGrlM82ZvyE9tPK_QPFNlTLiiEkNK1B8E';
     let headers: any = {};
     let fullURL: string = endpoint;
 
     if(token){
-      headers = { headers: new HttpHeaders({ Authorization: token })
+      headers = { headers: new HttpHeaders({ 'X-Goog-Api-Key': token })
       .set('Content-Type', 'application/json')};
     }
 
@@ -33,9 +33,18 @@ export class ApiService {
     });
   }
 
-  doGet(endpoint: string){
+  doGet(endpoint: string, isGoogle?: boolean){
+    let headers: any = {};
+    if(isGoogle){
+      let token = 'AIzaSyCGrlM82ZvyE9tPK_QPFNlTLiiEkNK1B8E';
+        headers = { headers: new HttpHeaders(
+          { 'X-Goog-Api-Key': token,
+            'X-Goog-FieldMask': '*'
+          }
+        ).set('Content-Type', 'application/json')};
+    }
     return new Promise((resolve, reject) => {
-      this.httpClient.get(endpoint)
+      this.httpClient.get(endpoint, headers)
       .subscribe({
         next: (response: any) => { resolve(response) },
         error: (error: any) => { reject(error) }

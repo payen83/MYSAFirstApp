@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'MYSAFirstApp',
+  appId: 'my.gov.test.idengue',
+  appName: 'iDengue',
   webDir: 'www'
 };
 

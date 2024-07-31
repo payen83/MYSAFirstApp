@@ -22,6 +22,11 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets/"
+              },
+              {
+                "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
               },
@@ -37,7 +42,8 @@
               }
             ],
             "styles": [
-              "src/global.scss", "src/theme/variables.scss",
+              "src/global.scss",
+              "src/theme/variables.scss",
               "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [
@@ -114,6 +120,11 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets/"
+              },
+              {
+                "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
               },
@@ -123,8 +134,13 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           },
           "configurations": {
             "ci": {

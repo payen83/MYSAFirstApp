@@ -31,11 +31,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.router.navigateByUrl('/dashboard', { replaceUrl: true }); 
+    this.router.navigateByUrl('/map2', { replaceUrl: true }); 
     await this.storage.create();
     
     // let HAS_SEEN_TUTORIAL = await this.dataService.getLocalStorage('HAS_SEEN_TUTORIAL');
-
     // if(HAS_SEEN_TUTORIAL){
     //   this.router.navigateByUrl('/dashboard', { replaceUrl: true });
     // } else {
@@ -45,13 +44,12 @@ export class AppComponent implements OnInit {
     await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/getstatistic.php', 'STATS');
     await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/gethotspot.php', 'HOTSPOT');
     await this.retrieveAPI('https://idengue.mysa.gov.my/folder_AppIdengue/getWABAK.php', 'WABAK');
-    
   }
 
   async retrieveAPI(url: string, key: string){
     let response: any = await this.apiService.doGet(url);
     if(response){
-      console.log(response);
+      // console.log(response);
       this.dataService.setData(key, response);
     }
   }

@@ -27,7 +27,7 @@ export class DashboardPage implements OnInit {
 
     setTimeout(() => {
       let stats: any = this.dataService.getData('STATS');
-      console.log(stats);
+      // console.log(stats);
       let sum = 0;
       for (let item of stats) {
         sum += Number(item.KES_HARIAN);

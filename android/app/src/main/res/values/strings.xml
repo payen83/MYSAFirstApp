@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">iDengue</string>
+    <string name="title_activity_main">iDengue</string>
+    <string name="package_name">my.gov.onegovappstore.idengue.mysa</string>
+    <string name="custom_url_scheme">my.gov.onegovappstore.idengue.mysa</string>
+</resources>

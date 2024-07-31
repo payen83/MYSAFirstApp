@@ -37,7 +37,6 @@ export class Map2Page implements OnInit, OnDestroy {
     const response: any = await Geolocation.getCurrentPosition();
     if (response) {
       let coords = response.coords;
-      console.log('Coordinate ==> ', coords);
       this.dataService.setData('GEOLOCATION', [coords.latitude, coords.longitude]);
     }
     this.setSearchSubject();
@@ -49,20 +48,36 @@ export class Map2Page implements OnInit, OnDestroy {
     });
   }
 
-  async beginSearch(keyword: string) {
-    console.log('call API for keyword', keyword);
-    //start calling API
-    let payload: any = { name: keyword }
-    try {
-      let response: any = await this.apiService.doPost('https://api.met.gov.my/v2/searchlocations', payload);
-      if (response) {
-        console.log(response);
-        this.resultList = response.results;
+  async getSearchDetails(items: any, access_token: string, session_token: string) {
+    let arrayItem = [];
+    for (let item of items) {
+      let responsePlace: any = await this.apiService.doGet(`https://api.mapbox.com/search/searchbox/v1/retrieve/${item.mapbox_id}?access_token=${access_token}&session_token=${session_token}`);
+      // console.log('response place', responsePlace);
+      if (responsePlace) {
+        const itemDetail = {
+          name: responsePlace.features[0].properties.name,
+          locationrootname: responsePlace.features[0].properties.place_formatted,
+          latitude: responsePlace.features[0].geometry.coordinates[1],
+          longitude: responsePlace.features[0].geometry.coordinates[0],
+        }
+        arrayItem.push(itemDetail);
+      } else {
+        arrayItem.push({});
       }
-    } catch (error: any) {
-      console.log(error.message)
+    }
+    return arrayItem;
+  }
+
+  async beginSearch(keyword: string) {
+    let access_token = 'pk.eyJ1IjoicGF5ZW44MyIsImEiOiJjbHoyNjFkamQyank3MmtzbDNjcTd0aGJiIn0.LSCf0jSb9bNdyJe_yzoJug';
+    let session_token = '04c4425a-f3ad-4fb1-8910-2c028f401d8f';
+    let response: any = await this.apiService.doGet(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${keyword}&access_token=${access_token}&session_token=${session_token}`);
+    if (response) {
+      let suggestions = response.suggestions;
+      this.resultList = await this.getSearchDetails(suggestions, access_token, session_token);
     }
   }
+
 
   onSearch() {
     this.resultList = [];
@@ -84,7 +99,16 @@ export class Map2Page implements OnInit, OnDestroy {
       this.map.removeLayer(marker);
     }
     this.searchText = '';
-    let marker = L.marker(coords_).addTo(this.map);
+    const markerIcon = L.icon({
+      iconSize: [25, 41],
+      iconAnchor: [10, 41],
+      popupAnchor: [2, -40],
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    })
+
+    let marker = L.marker(coords_, { icon: markerIcon }).addTo(this.map);
     this.map.flyTo(coords_);
     this.markers.push(marker);
     let point = { lat: coords_[0], lng: coords_[1] }
@@ -141,7 +165,6 @@ export class Map2Page implements OnInit, OnDestroy {
       }
       return finalPolygon;
     }
-
   }
 
   ionViewWillEnter() {
@@ -184,7 +207,6 @@ export class Map2Page implements OnInit, OnDestroy {
   }
 
   createFeatureLayer(feature_: any, layerControl_: any) {
-
     const icon_ = L.icon({
       iconUrl: feature_.iconURL,
       iconSize: [25, 25]
@@ -210,7 +232,7 @@ export class Map2Page implements OnInit, OnDestroy {
       },
       onEachFeature: (feature, layer) => {
         if (feature_.itemName == 'WABAK') {
-          console.log(feature);
+          // console.log(feature);
           this.polygonData.push(feature.geometry.coordinates);
         }
       }
@@ -233,30 +255,4 @@ export class Map2Page implements OnInit, OnDestroy {
     layerControl_.addOverlay(layer, feature_.itemName);
 
   }
-
-  /**
-   * const icon_ = L.icon({
-      iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAApBJREFUOI2t1F9oVnUcx/HXHsyzdJGeLuIRSkjN1CwrZJAzpScvdCUWpqIMbagZybLIoXjjhaw/1Ag10qUQiENTITbGkFS8ECHyItCJGgou8KjoKYqmh+ny4vnJ4zN1hPiBAz++3/N9/36f7+/Hd5CHrEED5CqiKJqeTc/mGeJFfYbJuazbkfyF/O4kSY7/b2Acx9Vpdboj68zG2F+WGodpiWSdmQ7qVI/ugYEz1Kdn0u91ylmAOozCo/gHXWhGp4JqXfHv8Rtpmv5yT2A0KSpkJ7JtEhX2YjYeQR+u4ylMwCxswWpV6avpQUeNv33SO4GDs3z2o99UaMNb+At78DVOYwY+CMBPQtVqQy20U6up5cAFltsl1oBaXMVidOAzPINf8U6ANWEF9qJVTT6fn5gkyfES8HHLCD3LYTMO4ESweQPvooCZqMHbAT6fZFayzHYNJWC30WAM/sR67MBz+AJr8FPo66f4DnPCZlDZ3/JJlWAI/gix0UgCTAD0YjK+wjU8FnLXPVEOfNYN5w2WYWiIXcIkLEQrPg8V5zAWlQEKVXr6A6/42Qjdis93qeJlTMH2YDuv+A7XoiX0+myoH15clYAj7cd7OjA+FNXgzbB+EofDRrWKF9Qb+gx/21oOvGiN1y3WKKeAl3EknHKOktZjJYZhH3bhfVc1ay8HNrscfRttzg5lDeZjd4C2YAP+xfDw9aEdc0MvJ6rHf+VAZB9mH/nGS1aZ6hV8Gew9jRg9OBZsbsRIoo+jpmxF1nabcfdwWOU1P9hmp3qNKjTe9UdRS/TGhXhlWpe23Bm+9zxcYqkOTRbZ5IwaXaqckvOCm553xSjtejSkdem1/qX3H7C1zgXDJZ1WHBYDaKCJ/UC6Bco1vMY7MGV+AAAAAElFTkSuQmCC",
-      iconSize: [25, 25]
-    });
-
-    let layer = esri.featureLayer({
-      url: 'https://mygis.mysa.gov.my/erica1/rest/services/iDengue/mobile_idengue/MapServer/2',
-      pointToLayer: (geojson, latlng) => {
-        // console.log(latlng);
-        console.log(geojson);
-        return L.marker(latlng, {
-          icon: icon_
-        });
-      }
-    }).addTo(this.map);
-
-    layer.bindPopup((layer_: any) => {
-      return L.Util.template(
-        "<p><strong>Lokaliti: </strong>{SPWD.AVT_HOTSPOTMINGGUAN.KODNEGERI}<br/><strong>Daerah: </strong> {DAERAH}<br/><strong>Negeri: </strong> {NEGERI}</p>", 
-        layer_.feature.properties
-      );
-    });
-   */
-
 }
